@@ -4,7 +4,11 @@
   "description": "Proyecto Base de Estudio para CUIZA",
   "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
+    "start": "node dist/server.js",
+    "watch-node": "nodemon dist/server.js",
+    "watch-ts": "tsc -w"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/mtrejo17/baseBackend/issues"
   },
-  "homepage": "https://github.com/mtrejo17/baseBackend#readme"
+  "homepage": "https://github.com/mtrejo17/baseBackend#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
 }
