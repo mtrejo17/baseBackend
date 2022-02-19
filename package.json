@@ -1,0 +1,19 @@
+{
+  "name": "basebackend",
+  "version": "1.0.0",
+  "description": "Proyecto Base de Estudio para CUIZA",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtrejo17/baseBackend.git"
+  },
+  "author": "Marcos Trejo Reyes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mtrejo17/baseBackend/issues"
+  },
+  "homepage": "https://github.com/mtrejo17/baseBackend#readme"
+}
