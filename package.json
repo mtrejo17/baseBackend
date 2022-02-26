@@ -2,7 +2,7 @@
   "name": "basebackend",
   "version": "1.0.0",
   "description": "Proyecto Base de Estudio para CUIZA",
-  "main": "dist/server.js",
+  "main": "dist/app.js",
   "scripts": {
     "build-ts": "tsc",
     "postinstall": "npm run build-ts",
