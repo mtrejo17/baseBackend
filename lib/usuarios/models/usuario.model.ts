@@ -10,7 +10,7 @@ let rolesUsuario = {
 
 export interface IUsuario extends mongoose.Document {
     apellidoPaterno: string;
-    apelligoMaterno: string;
+    apellidoMaterno: string;
     nombre: string;
     role: string;
     usuario: string;
