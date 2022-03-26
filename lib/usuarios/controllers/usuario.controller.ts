@@ -6,10 +6,10 @@ import Usuario from "../models/usuario.model";
 export class UsuarioController {
     //CRUD
     /*
-        CREATE 
-        READ
-        UPDATE
-        DETELE
+        CREATE post
+        READ get
+        UPDATE put
+        DETELE detele
         params
         body
     */
@@ -108,6 +108,55 @@ export class UsuarioController {
             )
         });
     }
+
+    public obtenerUsuarios = (req: Request, res: Response) => {
+        Usuario.find()
+        .then(usuarios => {
+            res.status(200).json(
+                {
+                    ok: true,
+                    usuarios
+                }
+            )
+        })
+        .catch(error => {
+            res.status(503).json(
+                {
+                    ok: false,
+                }
+            )
+        });
+    }
+
+    public obtenerUsuario = (req: Request, res: Response) => {
+        Usuario.findById(req.params.id)
+        .then(usuario => {
+            if (usuario) {
+                res.status(200).json(
+                    {
+                        ok: true,
+                        usuario
+                    }
+                );
+            } else {
+                res.status(404).json(
+                    {
+                        ok: false,
+                        message: 'usuario no encontrado'
+                    }
+                );
+            }
+        })
+        .catch(error => {
+            res.status(503).json(
+                {
+                    ok: false,
+                    error
+                }
+            );
+        });
+    }
+
 
     private existeUsuario(usuario: string): Promise<boolean> {
         return new Promise((resolve, reject) => {

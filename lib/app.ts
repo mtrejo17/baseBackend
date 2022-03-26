@@ -28,6 +28,8 @@ app.get( "/", ( req, res ) => {
 });
 
 app.route('/usuario').post(usuarioController.crearUsuario);
+app.route('/usuario/:id').get(usuarioController.obtenerUsuario);
+app.route('/usuarios').get(usuarioController.obtenerUsuarios);
 
 // conetamos a la base de datos
 mongoose.connect('mongodb://localhost:27017/base',{keepAlive: true}, (err) => {
