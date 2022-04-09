@@ -157,6 +157,124 @@ export class UsuarioController {
         });
     }
 
+    public actualizarUsuario = async (req: Request, res: Response) => {
+        if(!req.body.apellidoPaterno) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'apellidoPaterno no recibido'
+                }
+            );
+        }
+        if(!req.body.apellidoMaterno) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'apellidoMaterno no recibido'
+                }
+            );
+        }
+        if(!req.body.nombre) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'nombre no recibido'
+                }
+            );
+        } 
+        if(!req.body.role) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'role no recibido'
+                }
+            );
+        }   
+        if(!await this.validarRole(req.body.role)){
+            return res.status(400).json(
+                {
+                    ok: true,
+                    message: `el role ${req.body.role}, no es valido`
+                }
+            );
+        }
+        Usuario.findByIdAndUpdate(req.params.id, {
+            apellidoPaterno: req.body.apellidoPaterno,
+            apellidoMaterno: req.body.apellidoMaterno,
+            nombre: req.body.nombre,
+            role: req.body.role
+        })
+        .then(usuarioActualizado => {
+            res.status(200).json(
+                {
+                    ok: true,
+                    usuario: usuarioActualizado,
+                    message: 'usuario actualizado con exito'
+                }                
+            );
+        })
+        .catch(error => {
+            res.status(503).json(
+                {
+                    ok: false,
+                    message: 'usuario no actualizado',
+                    error
+                }
+            );
+        });
+    }
+
+    public actualizarDatosUsuario = async (req: Request, res: Response) => {
+        if(!req.body.apellidoPaterno) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'apellidoPaterno no recibido'
+                }
+            );
+        }
+        if(!req.body.apellidoMaterno) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'apellidoMaterno no recibido'
+                }
+            );
+        }
+        if(!req.body.nombre) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'nombre no recibido'
+                }
+            );
+        } 
+       
+        Usuario.findByIdAndUpdate(req.params.id, {
+            apellidoPaterno: req.body.apellidoPaterno,
+            apellidoMaterno: req.body.apellidoMaterno,
+            nombre: req.body.nombre
+        })
+        .then(usuarioActualizado => {
+            res.status(200).json(
+                {
+                    ok: true,
+                    usuario: usuarioActualizado,
+                    message: 'usuario actualizado con exito'
+                }                
+            );
+        })
+        .catch(error => {
+            res.status(503).json(
+                {
+                    ok: false,
+                    message: 'usuario no actualizado',
+                    error
+                }
+            );
+        });
+    }
+
 
     private existeUsuario(usuario: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
