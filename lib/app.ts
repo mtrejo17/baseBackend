@@ -34,6 +34,10 @@ app.route('/usuario/:id')
 app.route('/usuario/datos/:id')
 .put(usuarioController.actualizarDatosUsuario);
 app.route('/usuarios').get(usuarioController.obtenerUsuarios);
+app.route('/usuario/reestablecerPassword/:id')
+.put(usuarioController.reestablecerPassword);
+app.route('/usuario/actualizarCredenciales/:id')
+.put(usuarioController.actualizarCredenciales);
 
 // conectamos a la base de datos
 mongoose.connect('mongodb://localhost:27017/base',{keepAlive: true}, (err) => {

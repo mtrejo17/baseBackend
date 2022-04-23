@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import * as bcrypt from 'bcrypt';
 import Usuario from "../models/usuario.model";
+import { GENERIC_PASSWORD } from "config/config";
 
 
 export class UsuarioController {
@@ -53,15 +54,7 @@ export class UsuarioController {
                     message: 'role no recibido'
                 }
             );
-        }
-        if(!req.body.password) {
-            return res.status(400).json(
-                {
-                    ok: false,
-                    message: 'password no recibido'
-                }
-            );
-        }
+        }       
         if(await this.existeUsuario(req.body.usuario)){
             return res.status(400).json(
                 {
@@ -86,7 +79,7 @@ export class UsuarioController {
                 nombre: req.body.nombre,                
                 role: req.body.role,
                 usuario: req.body.usuario,
-                password: bcrypt.hashSync(req.body.password,10)
+                password: bcrypt.hashSync(GENERIC_PASSWORD,10)
             }
         );
         nuevoUsuario.save()
@@ -275,6 +268,130 @@ export class UsuarioController {
         });
     }
 
+    public reestablecerPassword = (req: Request, res: Response) => {
+        Usuario.findByIdAndUpdate(req.params.id, {password: bcrypt.hashSync(GENERIC_PASSWORD,10)})
+        .then(usuarioActualizado => {
+            res.status(200).json(
+                {
+                    ok: true,
+                    usuario: usuarioActualizado,
+                    message: 'contrasena reestablecida' 
+                }
+            );
+        })
+        .catch(error => {
+            res.status(400).json(
+                {
+                    ok: false,
+                    message: 'usuario no encontrado',
+                    error
+                }
+            );
+        });
+    }
+
+    public actualizarCredenciales = async (req: Request, res: Response) => {       
+        if(!req.body.usuario) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'usuario no recibido'
+                }
+            );
+        }
+        if(!req.body.passwordActual) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'passwordActual no recibido'
+                }
+            );
+        }
+        if(!req.body.nuevoPassword) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'nuevoPassword no recibido'
+                }
+            );
+        } 
+        if (! await this.validarUsuario(req.params.id, req.body.usuario)) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'usuario no valido'
+                }
+            );
+        }
+        if (!await this.validarPassword(req.params.id, req.body.passwordActual)) {
+            return res.status(400).json(
+                {
+                    ok: false,
+                    message: 'passwordActual no valido'
+                }
+            );
+        }
+        Usuario.findByIdAndUpdate(req.params.id,{usuario: req.body.usuario, password: bcrypt.hashSync(req.body.password,10)})
+        .then(usuarioActualizado => {
+            res.status(200).json(
+                {
+                    ok: true,
+                    usuario: usuarioActualizado,
+                    message: 'credenciales actualizadas'
+                }
+            );
+        })
+        .catch(error => {
+            res.status(400).json(
+                {
+                    ok: false,
+                    message: 'credenciales no actualizadas',
+                    error
+                }
+            );
+        });
+    }
+
+    private validarUsuario(idUsuario: string, usuario: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            Usuario.findOne({ usuario })
+            .then(usuarioEncontrado => {
+                if (usuarioEncontrado) {
+                    if (String(usuarioEncontrado._id) === usuario) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                } else {
+                    resolve(true);
+                }
+            })
+            .catch(error => {
+                resolve(false);
+            })
+        });
+    }
+
+
+    private validarPassword(idUsuario: string, password: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            Usuario.findById(idUsuario)
+            .then(usuarioEncontrado => {
+                if (usuarioEncontrado) {
+                    if (bcrypt.compareSync(password, usuarioEncontrado.password)) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch(error => {
+                resolve(false);
+            });
+        });
+    }
 
     private existeUsuario(usuario: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
