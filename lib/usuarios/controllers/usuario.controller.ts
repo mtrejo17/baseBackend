@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import * as bcrypt from 'bcrypt';
 import Usuario from "../models/usuario.model";
-import { GENERIC_PASSWORD } from "config/config";
+import { GENERIC_PASSWORD } from "../../config/config";
 
 
 export class UsuarioController {
